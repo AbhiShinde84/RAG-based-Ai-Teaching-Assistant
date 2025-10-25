@@ -1,42 +1,138 @@
-# How to use this RAG AI Teaching assistant on your own data
-## Step 1 - Collect your videos
-Move all your video files to the video folder
+# 🎓 KnowWhere: RAG-Based AI Teaching Assistant
 
-## Step 2 - Convert to mp3
-Convert all the video files to mp3 by ruunning process_video
+An intelligent Retrieval-Augmented Generation (RAG) AI that helps learners find **where specific topics are taught** within course videos — providing the **video title, timestamp, and human-like explanation** using LLaMA 3.2 and BGE-M3 embeddings.
 
-## Step 3 - Convert mp3 to json 
-Convert all the mp3 files to json by ruunning mp3_to_json
+---
 
-## Step 4 - Merge json chunks 
-For efficiency combine the json chunks by running merge_chunks
-Here you will get newjsons folder containing all new chunk_merged json files 
+## 🚀 How to Use This RAG AI Teaching Assistant on Your Own Data
 
-## Step 5 - Convert the json files to Vectors
-Use the file preprocessing_json to convert the json files to a dataframe with Embeddings and save it as a joblib pickle
+### Step 0 – Install Dependencies
 
-## Step 6 - Prompt generation and feeding to LLM
+Before running anything, install all Python libraries required by the project:
+```bash
+pip install -r requirements.txt
+```
+This ensures Streamlit, pandas, numpy, scikit-learn, joblib, requests, Whisper, and other packages are installed.
 
-Read the joblib file and load it into the memory. Then create a relevant prompt as per the user query and feed it to the LLM
+Also Follow the **Required Installations** 
 
+### **Step 1 – Collect Your Videos**
+Move all your video files into the `videos` folder.
 
-# Note : 
-    for ffmpeg (to convert mp4 to mp3) : 
-    https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl-shared.zip
+### **Step 2 – Convert Videos to MP3**
+Convert all video files to audio format using:
+```bash
+python process_video.py
+```
 
-    copy the extracted ffmpeg folder in the c drive in programfiles 
-    then add the bin folder path in the environment variables : 
-    for example : "C:\Program Files (x86)\ffmpeg\bin"
+### **Step 3 – Convert MP3 to JSON (Transcription)**
+Use Whisper to convert audio files to JSON transcripts:
+```bash
+python mp3_to_json.py
+```
 
-    for whisper :
-    pip install git+https://github.com/openai/whisper.git
+### **Step 4 – Merge JSON Chunks**
+Combine subtitle chunks for efficiency:
+```bash
+python merge_chunks.py
+```
+This will create a `newjsons` folder containing merged JSON files.
 
-    for using ollama :
-    download link : https://ollama.com/download/OllamaSetup.exe
+### **Step 5 – Convert JSON Files to Vectors**
+Convert transcripts to embeddings and save as a joblib file:
+```bash
+python preprocessing_json.py
+```
 
-    For ollama bge-m3 Run this command in terminal : "ollama pull bge-m3"
+### **Step 6 – Prompt Generation and LLM Response**
+Load the saved joblib file, create a context-aware prompt, and generate AI responses using:
+```bash
+python process_incoming.py
+```
 
-    for using lamma 3.2 llm model run  : "ollama run llama3.2"
-    
-    
+### **Step 7 – Deploy the Model with Streamlit**
+Launch the Streamlit-based GUI interface for interactive Q&A:
+```bash
+streamlit run KnowWhere.py
+```
+
+---
+
+## 🖼️ Screenshots
+
+### 🏠 **Home Page**
+<p align="center">
+  <img src="screenshots/home_page.png" alt="Home Page" width="700"/>
+</p>
+
+### 💬 **Question Input and Response**
+<p align="center">
+  <img src="screenshots/query_response_1.png" alt="Query and Response" width="700"/>
+</p>
+
+### 🔍 **Embedding and Similarity Retrieval Process**
+<p align="center">
+  <img src="screenshots/query_response_2.png" alt="Embedding Process" width="700"/>
+</p>
+
+---
+
+## ⚙️ Required Installations
+
+### **1. FFmpeg (Video to Audio Conversion)**
+Download: [FFmpeg Builds](https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-win64-gpl-shared.zip)
+
+Extract to:
+```
+C:\Program Files\ffmpeg
+```
+Then add the `bin` folder path to environment variables:
+```
+C:\Program Files\ffmpeg\bin
+```
+
+### **2. Whisper (Speech-to-Text)**
+```bash
+pip install git+https://github.com/openai/whisper.git
+```
+
+### **3. Ollama (Local Model Hosting)**
+Download and install Ollama: [https://ollama.com/download/OllamaSetup.exe](https://ollama.com/download/OllamaSetup.exe)
+
+Pull the required models:
+```bash
+ollama pull bge-m3
+ollama pull llama3.2
+```
+
+Run Ollama in background before executing the app.
+
+---
+
+## 🧠 Workflow Overview
+
+| Stage             | Tool                | Purpose                       |
+| ----------------- | ------------------- | ----------------------------- |
+| Video → Audio     | FFmpeg              | Extract speech                |
+| Audio → Text      | Whisper             | Transcribe                    |
+| Text → Embeddings | BGE-M3 via Ollama   | Semantic representation       |
+| Store             | Joblib              | Save embeddings and metadata  |
+| Query → Embedding | BGE-M3              | User query vector             |
+| Retrieve          | Cosine Similarity   | Find top relevant chunks      |
+| Generate Answer   | LLaMA 3.2 via Ollama| Generate human-like response  |
+| Output            | Text                | Answer with video + timestamp |
+
+---
+
+## 🧩 Project Features
+- Converts educational videos into **searchable AI knowledge**  
+- Retrieves **exact timestamps** and **video references**  
+- Provides **natural, human-like explanations**  
+- Detects and handles unrelated queries  
+- **Interactive GUI** for seamless use  
+
+---
+
+## 👨‍💻 Author
+**Abhijit Shinde**  
 
